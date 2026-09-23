@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#18273d">
+  <meta name="description" content="Rate 14 statements, discover an era, a place and a possible role, then discuss whether it fits.">
+  <title>Where in history would you fit?</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2318273d'/%3E%3Ccircle cx='32' cy='32' r='19' stroke='%23e4bd72' stroke-width='3' fill='none'/%3E%3Cpath d='M32 19v26M19 32h26' stroke='%23e4bd72' stroke-width='2'/%3E%3C/svg%3E">
+  <style>
+    :root { --navy:#18273d; --ink:#243248; --muted:#5b6776; --copper:#986820; --line:#d9d3c5; --paper:#fffdf8; --ground:#f2eee5; }
+    * { box-sizing:border-box; }
+    html { font-size:16px; }
+    body { margin:0; min-height:100svh; color:var(--ink); background:var(--ground); font:1rem/1.5 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    body::before { content:""; position:fixed; inset:0 0 auto; height:12rem; background:var(--navy); z-index:-1; }
+    button { font:inherit; cursor:pointer; }
+    button:focus-visible, a:focus-visible { outline:3px solid #b57a24; outline-offset:3px; }
+    .shell { max-width:780px; margin:auto; padding:clamp(18px,4vw,38px) 16px 54px; }
+    header { display:flex; justify-content:space-between; gap:14px; color:#f9f2e3; margin-bottom:23px; }
+    .brand { font:700 1.16rem/1.2 Georgia,"Times New Roman",serif; }
+    .brand small { display:block; margin-top:5px; font:700 .77rem/1.3 system-ui,sans-serif; letter-spacing:.11em; text-transform:uppercase; color:#e8d3a7; }
+    .edition { color:#e8d3a7; font-size:.8rem; text-align:right; white-space:nowrap; }
+    main { background:var(--paper); border:1px solid var(--line); border-radius:18px; overflow:hidden; box-shadow:0 18px 42px #0b193024; }
+    .rule { height:7px; background:linear-gradient(90deg,#bd8438,#e3c485,#bd8438); }
+    .inner { padding:clamp(22px,5vw,44px); }
+    .eyebrow { color:#92651e; text-transform:uppercase; letter-spacing:.12em; font-size:.78rem; font-weight:800; }
+    h1,h2,h3 { color:var(--navy); }
+    h1,h2 { font-family:Georgia,"Times New Roman",serif; letter-spacing:-.025em; line-height:1.13; }
+    h1 { font-size:clamp(2rem,7.3vw,3.45rem); margin:.3em 0 .35em; }
+    h2 { font-size:clamp(1.55rem,5.6vw,2.5rem); margin:.36em 0; }
+    h3 { margin:0 0 8px; font-size:1.06rem; }
+    p { margin:.65em 0; }
+    .lede { color:var(--muted); max-width:60ch; font-size:1.04rem; }
+    .progress-label { display:flex; justify-content:space-between; gap:12px; margin:26px 0 8px; color:var(--muted); font-size:.89rem; font-weight:650; }
+    .progress { height:7px; overflow:hidden; border-radius:99px; background:#e5e0d5; }
+    .progress span { display:block; height:100%; background:#af7930; transition:width .2s; }
+    fieldset { border:0; padding:0; margin:27px 0 0; min-width:0; }
+    legend { padding:0; font:700 clamp(1.35rem,4.7vw,1.9rem)/1.28 Georgia,"Times New Roman",serif; color:var(--navy); }
+    .hint { display:block; color:var(--muted); font-size:.94rem; margin:9px 0 17px; }
+    .scale { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:10px; }
+    .rate { min-height:68px; position:relative; display:grid; place-items:center; border:1.5px solid #c7c0b2; border-radius:12px; background:white; transition:background .15s,border-color .15s,transform .15s; }
+    .rate:hover { border-color:#9e783c; transform:translateY(-1px); }
+    .rate:has(input:checked) { border-color:var(--copper); background:#f8edd3; box-shadow:inset 0 0 0 1px var(--copper); }
+    .rate:has(input:focus-visible) { outline:3px solid #b57a24; outline-offset:3px; }
+    .rate input { position:absolute; opacity:0; width:1px; height:1px; }
+    .rate span { color:var(--navy); font-weight:800; font-size:1.26rem; }
+    .scale-ends { display:flex; justify-content:space-between; gap:16px; color:var(--muted); font-size:.84rem; font-weight:600; margin-top:10px; }
+    .scale-ends span:last-child { text-align:right; }
+    .actions { display:flex; justify-content:space-between; align-items:center; gap:10px; padding-top:23px; margin-top:27px; border-top:1px solid var(--line); }
+    .primary,.secondary { border-radius:10px; min-height:48px; padding:12px 19px; font-weight:750; }
+    .primary { margin-left:auto; border:1px solid var(--navy); color:white; background:var(--navy); }
+    .primary:hover:not(:disabled) { background:#304764; }
+    .primary:disabled { cursor:not-allowed; opacity:.43; }
+    .secondary { color:var(--navy); background:transparent; border:1px solid #b7b0a3; }
+    .secondary:hover { background:#f1ece3; }
+    .result-role { color:#865b1b; font:700 clamp(1.3rem,4vw,1.8rem)/1.25 Georgia,serif; margin:13px 0 17px; }
+    .result-place { font-weight:700; color:var(--muted); }
+    .scenario { font-size:1.08rem; max-width:63ch; }
+    .divider { border:0; border-top:1px solid var(--line); margin:26px 0; }
+    .why { padding:18px; border-radius:12px; background:#f5f0e5; border:1px solid #e5dccb; }
+    .why p { margin:0; }
+    .reality { border-left:4px solid #b68640; padding-left:17px; margin:22px 0; }
+    .reality h3 { font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:#90611d; }
+    .reality p { margin:0; }
+    .alternates { color:var(--muted); }
+    .alternates strong { color:var(--navy); }
+    .discussion { margin-top:26px; padding:20px; border-radius:12px; color:white; background:var(--navy); }
+    .discussion h3 { color:#f9edcf; font:700 1.34rem Georgia,serif; }
+    .discussion ol { padding-left:22px; margin:6px 0 0; }
+    .discussion li { padding-left:4px; margin:9px 0; }
+    .note { color:var(--muted); font-size:.85rem; margin:20px 0 0; }
+    footer { color:#5e6774; text-align:center; font-size:.83rem; max-width:63ch; margin:18px auto; }
+    @media(max-width:520px) { .inner { padding:22px 18px 25px; } .edition { font-size:.72rem; } .scale { gap:6px; } .rate { min-height:58px; } .discussion { padding:17px; } .primary,.secondary { padding:11px 13px; } }
+    @media(prefers-reduced-motion:reduce) { * { transition:none!important; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header><div class="brand">The Time Traveller’s Passport<small>An English seminar conversation quiz</small></div><div class="edition">14 ratings · about 3 minutes</div></header>
+    <main id="app" aria-live="polite"></main>
+    <footer>No login. Your answers stay on this device and disappear when you close or refresh the page.</footer>
+  </div>
+  <script>
+    "use strict";
+    // Ratings in this order: travel, sea, art, debate, reform, making,
+    // learning, ceremony, leadership, exchange, uncertainty, quiet, strategy, stability.
+    const statements = [
+      {text:"I would enjoy travelling far from home.", high:"a taste for travel", low:"staying close to home"},
+      {text:"I would enjoy spending weeks at sea.", high:"a pull towards the sea", low:"a preference for land"},
+      {text:"Art, music, fashion or performance is important to me.", high:"creative expression", low:"a practical focus"},
+      {text:"I enjoy debating ideas in public.", high:"public debate", low:"private discussion"},
+      {text:"I would take personal risks to change an unfair system.", high:"a willingness to push for change", low:"caution about upheaval"},
+      {text:"I enjoy designing or fixing practical things.", high:"building useful things", low:"ideas over machinery"},
+      {text:"Books, languages and difficult questions fascinate me.", high:"learning and scholarship", low:"hands-on experience"},
+      {text:"I would enjoy formal dress, ceremonies and grand gatherings.", high:"ceremony and social life", low:"informal settings"},
+      {text:"I like leading a group.", high:"leadership", low:"letting others take the lead"},
+      {text:"I like exchanging goods or ideas with people from different places.", high:"exchange across cultures", low:"a familiar circle"},
+      {text:"I feel comfortable when plans change suddenly.", high:"adaptability", low:"steady plans"},
+      {text:"I prefer working behind the scenes to being in the spotlight.", high:"working behind the scenes", low:"being seen and heard"},
+      {text:"I enjoy planning strategy under pressure.", high:"strategy", low:"acting in the moment"},
+      {text:"I prefer a stable, predictable way of life.", high:"stability", low:"a changing world"}
+    ];
+    const worlds = [
+      {
+        era:"Ancient Greece", place:"Athens · 5th century BCE", role:"Speaker at the Assembly",
+        scene:"You prepare an argument, listen to rivals and try to persuade an audience before an important decision.",
+        reality:"Participation in the Assembly was restricted; most people living in Athens could not speak there.",
+        profile:[2,1,2,5,3,1,5,3,5,3,4,1,4,3]
+      },
+      {
+        era:"Roman Republic", place:"Rome · 1st century BCE", role:"Civic organiser near the Forum",
+        scene:"You gather supporters, negotiate between powerful people and try to keep a complicated public project moving.",
+        reality:"Status and connections shaped whose voice carried weight in Roman public life.",
+        profile:[3,2,2,4,3,3,4,4,5,4,4,2,5,4]
+      },
+      {
+        era:"Abbasid era", place:"Baghdad · 9th century", role:"Translator and scholar",
+        scene:"You compare manuscripts, learn from other languages and help an idea travel to a new audience.",
+        reality:"Scholarship required education and support; this was not an opportunity open equally to everyone.",
+        profile:[2,1,2,3,2,2,5,2,2,5,2,5,2,4]
+      },
+      {
+        era:"Heian period", place:"Kyoto · 11th century", role:"Court poet and letter writer",
+        scene:"You choose exactly the right words for a poem or letter, where style and social meaning both matter.",
+        reality:"Courtly culture belonged to a small elite, even while it produced remarkable literature.",
+        profile:[1,1,5,2,1,1,5,5,2,2,2,4,2,5]
+      },
+      {
+        era:"Mali Empire", place:"West African Sahel · 14th century", role:"Caravan merchant",
+        scene:"You plan a long overland journey, exchange goods and news, and build relationships across distant markets.",
+        reality:"Long-distance trade demanded resources and endurance; these routes also carried unequal power.",
+        profile:[5,1,2,2,2,2,3,2,4,5,5,2,4,2]
+      },
+      {
+        era:"Inka Empire", place:"Andes · 15th century", role:"Chaski relay messenger",
+        scene:"You carry messages through mountain routes, relying on speed, teamwork and knowledge of the road.",
+        reality:"The relay system was impressive, but the work was physically demanding and served an empire.",
+        profile:[5,1,1,1,2,2,2,1,2,3,5,3,3,2]
+      },
+      {
+        era:"Renaissance", place:"Florence · 15th century", role:"Artist’s apprentice",
+        scene:"You learn from a workshop, practise a craft and turn an idea into something people can see.",
+        reality:"An apprentice spent years learning and working under a master; art also depended on patrons.",
+        profile:[3,1,5,3,2,4,4,3,3,3,4,3,2,3]
+      },
+      {
+        era:"Ming dynasty", place:"Nanjing · early 15th century", role:"Shipwright for ocean voyages",
+        scene:"You help build and prepare vessels for ambitious voyages, balancing craft, planning and the pull of the sea.",
+        reality:"The voyages were imperial projects; working on them did not mean choosing your own destination.",
+        profile:[4,5,2,2,2,5,4,3,4,4,3,3,5,3]
+      },
+      {
+        era:"Age of Ocean Voyages", place:"Lisbon · early 16th century", role:"Navigator on an Atlantic voyage",
+        scene:"You study routes, prepare for an uncertain crossing and follow your curiosity beyond familiar shores.",
+        reality:"Europeans did not 'discover' empty lands. These voyages were tied to conquest, exploitation and enormous danger.",
+        profile:[5,5,2,2,2,3,3,1,4,5,5,2,5,1]
+      },
+      {
+        era:"French absolute monarchy", place:"Versailles · late 17th century", role:"Court guest dancing at a ball",
+        scene:"You dress for the occasion, learn the dances and read the social rules in a room full of attention.",
+        reality:"The glamour depended on strict rank, etiquette and privileges many people never had.",
+        profile:[1,1,5,2,1,1,2,5,3,3,2,1,4,5]
+      },
+      {
+        era:"French Revolution", place:"Paris · 1790s", role:"Pamphlet writer",
+        scene:"You put urgent ideas into words, argue for change and try to persuade people at a turning point.",
+        reality:"Revolutionary politics could change quickly; speaking publicly could carry grave risks.",
+        profile:[3,1,3,5,5,1,4,1,4,4,5,1,4,1]
+      },
+      {
+        era:"Napoleonic era", place:"France · early 19th century", role:"Military mapmaker",
+        scene:"You turn terrain and information into maps that help a team make difficult decisions.",
+        reality:"Your careful work would support military campaigns and their human costs.",
+        profile:[4,2,2,2,3,4,4,3,4,3,5,4,5,2]
+      },
+      {
+        era:"Industrial Revolution", place:"Manchester · 19th century", role:"Machine designer",
+        scene:"You test a mechanism, improve it and watch a practical idea alter the way people work.",
+        reality:"Factories brought innovation alongside harsh labour and deep inequality.",
+        profile:[2,1,2,1,2,5,3,1,3,2,4,4,3,3]
+      },
+      {
+        era:"Russian Revolution", place:"Petrograd · 1917", role:"Underground printer",
+        scene:"You work quietly with words and equipment to get an idea into the hands of others.",
+        reality:"Secret political work could put you and the people around you in danger.",
+        profile:[2,1,2,4,5,2,4,1,2,3,5,5,4,1]
+      },
+      {
+        era:"Harlem Renaissance", place:"New York · 1920s", role:"Jazz club performer",
+        scene:"You turn music and performance into a way of expressing new ideas to a lively audience.",
+        reality:"Black artistic achievement flourished despite racism and segregation.",
+        profile:[3,1,5,3,4,2,2,4,4,5,5,1,2,2]
+      },
+      {
+        era:"Space Race", place:"Baikonur, Soviet Kazakhstan · 1960s", role:"Space programme engineer",
+        scene:"You check a system, solve a technical problem and help a team prepare for a launch.",
+        reality:"Technical breakthroughs relied on large teams and unfolded amid intense political rivalry.",
+        profile:[4,2,1,1,2,5,5,1,3,3,4,5,5,2]
+      }
+    ];
+
+    const app=document.getElementById("app");
+    const ratings=Array(statements.length).fill(null);
+    let position=0;
+    function el(tag,cls,content) {
+      const x=document.createElement(tag);
+      if(cls) x.className=cls;
+      if(content!==undefined) x.textContent=content;
+      return x;
+    }
+    function startPanel() {
+      app.replaceChildren(el("div","rule"));
+      const content=el("div","inner");
+      app.append(content);
+      return content;
+    }
+    function action(label,style,fn) {
+      const b=el("button",style,label);
+      b.type="button";
+      b.addEventListener("click",fn);
+      return b;
+    }
+    function goTop() { window.scrollTo(0,0); }
+    function renderQuestion() {
+      const root=startPanel();
+      root.append(el("div","eyebrow","Where in history would you fit?"));
+      if(position===0) {
+        root.append(el("h1",null,"Find your place in history"));
+        root.append(el("p","lede","I made this because I love history. Rate each statement from 1 to 5; then discuss whether your era, place and activity really fit you."));
+      }
+      const text=el("div","progress-label");
+      text.append(el("span",null,"Statement "+(position+1)+" of "+statements.length),el("span",null,"1 = disagree · 5 = agree"));
+      root.append(text);
+      const bar=el("div","progress");
+      bar.setAttribute("role","progressbar");
+      bar.setAttribute("aria-label","Quiz progress");
+      bar.setAttribute("aria-valuemin","1");
+      bar.setAttribute("aria-valuemax",String(statements.length));
+      bar.setAttribute("aria-valuenow",String(position+1));
+      const fill=el("span");
+      fill.style.width=String((position+1)*100/statements.length)+"%";
+      bar.append(fill);
+      root.append(bar);
+      const group=el("fieldset");
+      group.append(el("legend",null,statements[position].text));
+      group.append(el("span","hint","How much does this sound like you?"));
+      const scale=el("div","scale");
+      const controls=el("div","actions");
+      if(position>0) controls.append(action("Back","secondary",()=>{position--;renderQuestion();goTop();}));
+      const next=action(position===statements.length-1?"See my result":"Next statement","primary",()=>{
+        if(ratings[position]===null) return;
+        if(position===statements.length-1) renderResult();
+        else {position++;renderQuestion();goTop();}
+      });
+      next.disabled=ratings[position]===null;
+      controls.append(next);
+      for(let value=1;value<=5;value++) {
+        const label=el("label","rate");
+        const radio=document.createElement("input");
+        radio.type="radio";
+        radio.name="rating-"+position;
+        radio.value=String(value);
+        radio.setAttribute("aria-label",value===1?"1, strongly disagree":value===5?"5, strongly agree":String(value));
+        radio.checked=ratings[position]===value;
+        radio.addEventListener("change",()=>{ratings[position]=value;next.disabled=false;});
+        label.append(radio,el("span",null,String(value)));
+        scale.append(label);
+      }
+      group.append(scale);
+      const ends=el("div","scale-ends");
+      ends.append(el("span",null,"Strongly disagree"),el("span",null,"Strongly agree"));
+      group.append(ends);
+      root.append(group,controls);
+    }
+    function rankedWorlds() {
+      return worlds.map((world,original)=>({
+        world,original,
+        distance:world.profile.reduce((sum,target,i)=>sum+Math.abs(target-ratings[i]),0)
+      })).sort((a,b)=>a.distance-b.distance||a.original-b.original);
+    }
+    function matchingReasons(world) {
+      return statements.map((s,i)=>{
+        const answer=ratings[i], target=world.profile[i];
+        return {
+          phrase:answer>3?s.high:s.low,
+          weight:Math.abs(answer-3)*Math.abs(target-3)-Math.abs(answer-target)
+        };
+      }).filter((item,i)=>Math.abs(ratings[i]-3)>0 &&
+        (ratings[i]-3)*(world.profile[i]-3)>0)
+        .sort((a,b)=>b.weight-a.weight)
+        .slice(0,3)
+        .map(item=>item.phrase);
+    }
+    function renderResult() {
+      const ranked=rankedWorlds();
+      const best=ranked[0], w=best.world;
+      const root=startPanel();
+      root.append(el("div","eyebrow","Your time traveller’s passport"));
+      root.append(el("h1",null,w.era));
+      root.append(el("p","result-place",w.place));
+      root.append(el("div","result-role",w.role));
+      root.append(el("p","scenario",w.scene));
+      root.append(el("hr","divider"));
+      const why=el("section","why");
+      why.append(el("h3",null,"Why you got this result"));
+      const reasons=matchingReasons(w);
+      why.append(el("p",null,reasons.length ?
+        "Your ratings pointed towards "+reasons.join(", ")+"."
+        : "Your answers were mostly in the middle, so this match is especially open to debate."));
+      root.append(why);
+      const catchBox=el("section","reality");
+      catchBox.append(el("h3",null,"A historical reality to consider"),el("p",null,w.reality));
+      root.append(catchBox);
+      const alternatives=ranked.slice(1,3);
+      const other=el("p","alternates");
+      other.append(el("strong",null,"Other possible matches: "));
+      other.append(document.createTextNode(alternatives.map(item=>item.world.era+" — "+item.world.role).join("; ")+"."));
+      root.append(other);
+      if(alternatives[0].distance===best.distance) root.append(el("p","note","Your top results were tied; use that disagreement as part of the conversation."));
+      const discuss=el("section","discussion");
+      discuss.append(el("h3",null,"Talk to a partner for two minutes"));
+      const list=el("ol");
+      for(const prompt of [
+        "Which part of your result fits you best? Give an example from your life.",
+        "Which part feels wrong, or what does the quiz miss about you?",
+        "Would one of your other possible matches fit better? Why?"
+      ]) list.append(el("li",null,prompt));
+      discuss.append(list);
+      root.append(discuss);
+      root.append(el("p","note","A playful match based on your ratings, not a claim that everyone could access this role or that life in this period was easy."));
+      const controls=el("div","actions");
+      controls.append(action("Change answers","secondary",()=>{position=statements.length-1;renderQuestion();goTop();}));
+      controls.append(action("Start again","primary",()=>{ratings.fill(null);position=0;renderQuestion();goTop();}));
+      root.append(controls);
+      goTop();
+    }
+    renderQuestion();
+  </script>
+</body>
+</html>
