@@ -64,19 +64,15 @@
     .reality p { margin:0; }
     .alternates { color:var(--muted); }
     .alternates strong { color:var(--navy); }
-    .discussion { margin-top:26px; padding:20px; border-radius:12px; color:white; background:var(--navy); }
-    .discussion h3 { color:#f9edcf; font:700 1.34rem Georgia,serif; }
-    .discussion ol { padding-left:22px; margin:6px 0 0; }
-    .discussion li { padding-left:4px; margin:9px 0; }
     .note { color:var(--muted); font-size:.85rem; margin:20px 0 0; }
     footer { color:#5e6774; text-align:center; font-size:.83rem; max-width:63ch; margin:18px auto; }
-    @media(max-width:520px) { .inner { padding:22px 18px 25px; } .edition { font-size:.72rem; } .scale { gap:6px; } .rate { min-height:58px; } .discussion { padding:17px; } .primary,.secondary { padding:11px 13px; } }
+    @media(max-width:520px) { .inner { padding:22px 18px 25px; } .edition { font-size:.72rem; } .scale { gap:6px; } .rate { min-height:58px; } .primary,.secondary { padding:11px 13px; } }
     @media(prefers-reduced-motion:reduce) { * { transition:none!important; } }
   </style>
 </head>
 <body>
   <div class="shell">
-    <header><div class="brand">The Time Traveller’s Passport<small>An English seminar conversation quiz</small></div><div class="edition">14 ratings · about 3 minutes</div></header>
+    <header><div class="brand">The Time Traveller’s Passport<small>An English seminar quiz</small></div><div class="edition">14 ratings · about 3 minutes</div></header>
     <main id="app" aria-live="polite"></main>
     <footer>No login. Your answers stay on this device and disappear when you close or refresh the page.</footer>
   </div>
@@ -226,7 +222,7 @@
       root.append(el("div","eyebrow","Where in history would you fit?"));
       if(position===0) {
         root.append(el("h1",null,"Find your place in history"));
-        root.append(el("p","lede","I made this because I love history. Rate each statement from 1 to 5; then discuss whether your era, place and activity really fit you."));
+        root.append(el("p","lede","I made this because I love history. Rate each statement from 1 to 5 to find your era, place and activity."));
       }
       const text=el("div","progress-label");
       text.append(el("span",null,"Statement "+(position+1)+" of "+statements.length),el("span",null,"1 = disagree · 5 = agree"));
@@ -317,16 +313,6 @@
       other.append(document.createTextNode(alternatives.map(item=>item.world.era+" — "+item.world.role).join("; ")+"."));
       root.append(other);
       if(alternatives[0].distance===best.distance) root.append(el("p","note","Your top results were tied; use that disagreement as part of the conversation."));
-      const discuss=el("section","discussion");
-      discuss.append(el("h3",null,"Talk to a partner for two minutes"));
-      const list=el("ol");
-      for(const prompt of [
-        "Which part of your result fits you best? Give an example from your life.",
-        "Which part feels wrong, or what does the quiz miss about you?",
-        "Would one of your other possible matches fit better? Why?"
-      ]) list.append(el("li",null,prompt));
-      discuss.append(list);
-      root.append(discuss);
       root.append(el("p","note","A playful match based on your ratings, not a claim that everyone could access this role or that life in this period was easy."));
       const controls=el("div","actions");
       controls.append(action("Change answers","secondary",()=>{position=statements.length-1;renderQuestion();goTop();}));
